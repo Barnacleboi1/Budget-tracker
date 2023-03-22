@@ -69,19 +69,6 @@ public class Main {
                 }
             }
         }
-        /*
-
-        List<String> list = new ArrayList<>();
-        double total = 0;
-        while (scanner.hasNext()) {
-            input = scanner.nextLine();
-            list.add(input);
-            total += Double.parseDouble(input.substring(input.lastIndexOf("$") + 1));
-        }
-        list.forEach(System.out :: println);
-
-        System.out.printf("\ntotal: $%.2f", total);
-        */
     }
     public static int choosingAction() {
         System.out.println();
