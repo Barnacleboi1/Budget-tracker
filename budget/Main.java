@@ -30,16 +30,21 @@ public class Main {
                 }
 
                 case ADD_PURCHASE -> {
-                        System.out.println("Enter purchase name:");
-                        scanner.nextLine();
-                        String name = scanner.nextLine();
-                        System.out.println("Enter its price:");
-                        double price = scanner.nextDouble();
-                        listOfPurchases.add(new Purchase(name, price));
-                        sumOfPurchases += price;
-                        balance -= price;
-                        System.out.println("Purchase was added!");
+                    PurchaseType type = pickPurchaseType();
+                        if (type != PurchaseType.BACK) {
 
+                            System.out.println("Enter purchase name:");
+                            scanner.nextLine();
+                            String name = scanner.nextLine();
+                            System.out.println("Enter its price:");
+                            double price = scanner.nextDouble();
+                            listOfPurchases.add(new Purchase(name, price, type));
+                            // mozna zkus nejak udelat tu hashmapu abys printoval jenom ten jeden typ???
+
+                            sumOfPurchases += price;
+                            balance -= price;
+                            System.out.println("Purchase was added!");
+                        }
                 }
 
                 case LIST_OF_PURCHASES -> {
@@ -69,6 +74,22 @@ public class Main {
                 }
             }
         }
+    }
+    public static PurchaseType pickPurchaseType() {
+        System.out.println("""
+                Choose the type of purchase
+                1) Food
+                2) Clothes
+                3) Entertainment
+                4) Other
+                5) Back""");
+        int input = scanner.nextInt();
+        return input == 1 ? PurchaseType.FOOD
+                : input == 2 ? PurchaseType.CLOTHES
+                : input == 3 ? PurchaseType.ENTERTAINMENT
+                : input == 4 ? PurchaseType.OTHER
+                : input == 5 ? PurchaseType.BACK
+                : null;
     }
     public static int choosingAction() {
         System.out.println();
