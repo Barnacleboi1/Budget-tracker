@@ -10,11 +10,12 @@ public class Main {
 
 
         double balance = 0;
-        double sumOfPurchases = 0;
-        List<Purchase> listOfPurchases = new ArrayList<>();
+        double totalSumOfPurchases = 0;
+        Map<Purchase, PurchaseType> mapOfPurchases= new HashMap<>();
 
         while (true) {
             int numOfAction = choosingAction();
+
             Action currentAction = numOfAction == 1 ? ADD_INCOME
                     : numOfAction == 2 ? ADD_PURCHASE
                     : numOfAction == 3 ? LIST_OF_PURCHASES
@@ -31,31 +32,61 @@ public class Main {
 
                 case ADD_PURCHASE -> {
                     PurchaseType type = pickPurchaseType();
-                        if (type != PurchaseType.BACK) {
+                        while (type != PurchaseType.BACK) {
 
                             System.out.println("Enter purchase name:");
                             scanner.nextLine();
                             String name = scanner.nextLine();
                             System.out.println("Enter its price:");
                             double price = scanner.nextDouble();
-                            listOfPurchases.add(new Purchase(name, price, type));
-                            // mozna zkus nejak udelat tu hashmapu abys printoval jenom ten jeden typ???
 
-                            sumOfPurchases += price;
+                            mapOfPurchases.put(new Purchase(name, price, type)
+                                    , new Purchase(name, price, type).getPurchaseType());
+                            totalSumOfPurchases += price;
                             balance -= price;
                             System.out.println("Purchase was added!");
+                            System.out.println();
+                            type = pickPurchaseType();
+
                         }
                 }
 
                 case LIST_OF_PURCHASES -> {
-                    if (listOfPurchases.isEmpty()) {
-                        System.out.println("The purchase list is empty");
-                    }
-                    else {
-                        for (Purchase purchase : listOfPurchases) {
-                            System.out.printf("%s $%.2f\n", purchase.getName(), purchase.getPrice());
+                    double sumOfPurchases = 0;
+                    PurchaseType typeToShow = pickTypeToShow();
+                    while (typeToShow != PurchaseType.BACK) {
+                        if (mapOfPurchases.isEmpty()) {
+                            System.out.println("The purchase list is empty!");
+                            typeToShow = PurchaseType.BACK;
+                        } else {
+                            if (typeToShow == PurchaseType.ALL) {
+                                System.out.println(PurchaseType.ALL);
+                                mapOfPurchases.forEach((purchase, type) -> System.out.println(purchase.toString()));
+                                System.out.printf("Total sum: $%.2f\n", totalSumOfPurchases);
+                                System.out.println();
+
+                            } else {
+                                if (!mapOfPurchases.containsValue(typeToShow)) {
+
+                                    System.out.println(typeToShow.toString());
+                                    System.out.println("The purchase list is empty!");
+                                    System.out.println();
+
+                                }
+                                else {
+                                    for (var entry : mapOfPurchases.entrySet()) {
+                                        if (entry.getValue() == typeToShow) {
+                                            System.out.println(entry.getKey().toString());
+                                            sumOfPurchases += entry.getKey().getPrice();
+                                        }
+                                    }
+                                    System.out.printf("Total sum: $%.2f\n", sumOfPurchases);
+                                    System.out.println();
+                                }
+                            }
+                            typeToShow = pickTypeToShow();
                         }
-                        System.out.printf("Total sum: $%.2f\n", sumOfPurchases);
+                        sumOfPurchases = 0;
                     }
                 }
 
@@ -67,7 +98,6 @@ public class Main {
                         System.out.printf("Balance: $%.2f\n", balance);
                     }
                 }
-
                 case EXIT -> {
                     System.out.println("Bye!");
                     System.exit(0);
@@ -83,12 +113,33 @@ public class Main {
                 3) Entertainment
                 4) Other
                 5) Back""");
+        scanner.nextLine();
         int input = scanner.nextInt();
+        System.out.println();
         return input == 1 ? PurchaseType.FOOD
                 : input == 2 ? PurchaseType.CLOTHES
                 : input == 3 ? PurchaseType.ENTERTAINMENT
                 : input == 4 ? PurchaseType.OTHER
                 : input == 5 ? PurchaseType.BACK
+                : null;
+    }
+    public static PurchaseType pickTypeToShow() {
+        System.out.println("""
+                Choose the type of purchase
+                1) Food
+                2) Clothes
+                3) Entertainment
+                4) Other
+                5) All
+                6) Back""");
+        int input = scanner.nextInt();
+        System.out.println();
+        return input == 1 ? PurchaseType.FOOD
+                : input == 2 ? PurchaseType.CLOTHES
+                : input == 3 ? PurchaseType.ENTERTAINMENT
+                : input == 4 ? PurchaseType.OTHER
+                : input == 5 ? PurchaseType.ALL
+                : input == 6 ? PurchaseType.BACK
                 : null;
     }
     public static int choosingAction() {
@@ -102,11 +153,9 @@ public class Main {
                         0) %s
                         """, ADD_INCOME, ADD_PURCHASE,
                 LIST_OF_PURCHASES, BALANCE, EXIT);
-        System.out.println();
         int result = scanner.nextInt();
         System.out.println();
 
         return result;
-
     }
 }
