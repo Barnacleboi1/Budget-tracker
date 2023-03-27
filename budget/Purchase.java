@@ -27,4 +27,7 @@ public class Purchase {
     public String toString() {
         return String.format("%s $%.2f", getName(), getPrice());
     }
+    public String intoFile() {
+        return String.format("\n%s $%.2f %s", getName(), getPrice(), getPurchaseType().toString().replaceAll(":", ""));
+    }
 }

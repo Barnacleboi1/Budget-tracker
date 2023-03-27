@@ -1,10 +1,12 @@
 package budget;
 
+import java.io.*;
 import java.util.*;
 import static budget.Action.*;
 
 public class Main {
     public static Scanner scanner = new Scanner(System.in);
+    public static File file = new File ("C:\\Users\\HP\\eclipse-workspace\\Budget Manager\\Budget Manager\\task\\src\\purchases.txt");
     public static void main(String[] args) {
 
 
@@ -13,15 +15,11 @@ public class Main {
         double totalSumOfPurchases = 0;
         Map<Purchase, PurchaseType> mapOfPurchases= new HashMap<>();
 
-        while (true) {
-            int numOfAction = choosingAction();
+        BufferedWriter writer = null;
 
-            Action currentAction = numOfAction == 1 ? ADD_INCOME
-                    : numOfAction == 2 ? ADD_PURCHASE
-                    : numOfAction == 3 ? LIST_OF_PURCHASES
-                    : numOfAction == 4 ? BALANCE
-                    : numOfAction == 0 ? EXIT
-                    : null;
+        while (true) {
+
+            Action currentAction = choosingAction();
 
             switch (currentAction) {
                 case ADD_INCOME -> {
@@ -98,6 +96,21 @@ public class Main {
                         System.out.printf("Balance: $%.2f\n", balance);
                     }
                 }
+                case SAVE -> {
+                    try {
+                        writer = new BufferedWriter(new FileWriter(file));
+                        writer.write(String.format("Balance: $%.2f", balance));
+                        for (Purchase purchase : mapOfPurchases.keySet()) {
+                            writer.write(purchase.intoFile());
+                        }
+                        writer.close();
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                case LOAD -> loadFiles();
                 case EXIT -> {
                     System.out.println("Bye!");
                     System.exit(0);
@@ -142,7 +155,7 @@ public class Main {
                 : input == 6 ? PurchaseType.BACK
                 : null;
     }
-    public static int choosingAction() {
+    public static Action choosingAction() {
         System.out.println();
         System.out.printf("""
                         Choose your action:
@@ -150,12 +163,35 @@ public class Main {
                         2) %s
                         3) %s
                         4) %s
+                        5) %s
+                        6) %s
                         0) %s
                         """, ADD_INCOME, ADD_PURCHASE,
-                LIST_OF_PURCHASES, BALANCE, EXIT);
+                LIST_OF_PURCHASES, BALANCE, SAVE, LOAD, EXIT);
         int result = scanner.nextInt();
         System.out.println();
 
-        return result;
+        return result == 1 ? ADD_INCOME
+                : result == 2 ? ADD_PURCHASE
+                : result == 3 ? LIST_OF_PURCHASES
+                : result == 4 ? BALANCE
+                : result == 5 ? SAVE
+                : result == 6 ? LOAD
+                : result == 0 ? EXIT
+                : null;
+    }
+    public static void loadFiles(){
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
