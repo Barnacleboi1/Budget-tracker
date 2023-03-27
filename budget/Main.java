@@ -6,14 +6,12 @@ import static budget.Action.*;
 
 public class Main {
     public static Scanner scanner = new Scanner(System.in);
-    public static File file = new File ("C:\\Users\\HP\\eclipse-workspace\\Budget Manager\\Budget Manager\\task\\src\\purchases.txt");
+    public static double balance = 0;
+    public static double totalSumOfPurchases = 0;
+    public static Map<Purchase, PurchaseType> mapOfPurchases= new HashMap<>();
+    public static File file = new File ("purchases.txt");
     public static void main(String[] args) {
 
-
-
-        double balance = 0;
-        double totalSumOfPurchases = 0;
-        Map<Purchase, PurchaseType> mapOfPurchases= new HashMap<>();
 
         BufferedWriter writer = null;
 
@@ -40,7 +38,6 @@ public class Main {
 
                             mapOfPurchases.put(new Purchase(name, price, type)
                                     , new Purchase(name, price, type).getPurchaseType());
-                            totalSumOfPurchases += price;
                             balance -= price;
                             System.out.println("Purchase was added!");
                             System.out.println();
@@ -59,7 +56,10 @@ public class Main {
                         } else {
                             if (typeToShow == PurchaseType.ALL) {
                                 System.out.println(PurchaseType.ALL);
-                                mapOfPurchases.forEach((purchase, type) -> System.out.println(purchase.toString()));
+                                for (Purchase purchase : mapOfPurchases.keySet()) {
+                                    System.out.println(purchase.toString());
+                                    totalSumOfPurchases += purchase.getPrice();
+                                }
                                 System.out.printf("Total sum: $%.2f\n", totalSumOfPurchases);
                                 System.out.println();
 
@@ -103,11 +103,14 @@ public class Main {
                         for (Purchase purchase : mapOfPurchases.keySet()) {
                             writer.write(purchase.intoFile());
                         }
+
                         writer.close();
                     }
                     catch (Exception e) {
                         e.printStackTrace();
                     }
+                    System.out.println();
+                    System.out.println("Purchases were saved!");
 
                 }
                 case LOAD -> loadFiles();
@@ -183,15 +186,42 @@ public class Main {
     public static void loadFiles(){
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
+            String balanceInFile = reader.readLine()
+                    .split(" ")[1]
+                    .replace("$", "")
+                    .replace(",", ".");
+
+
+            balance += Double.parseDouble(balanceInFile);
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+                String[] array = line.split(" ");
+                PurchaseType typeOfItem = null;
+                double priceOfItem = 0;
+                String nameOfItem = "";
+                for (int i = 0; i < array.length; i++) {
+                    if (array[i].contains("$")) {
+                        priceOfItem = Double.parseDouble(
+                                array[i].replace("$", "")
+                                        .replace(",", "."));
+                        nameOfItem = String.join(" ", Arrays.copyOfRange(array, 0, i));
+                        for (PurchaseType value : PurchaseType.values()) {
+                            if (value.toString().contains(array[i + 1])) {
+                                typeOfItem = value;
+                            }
+                        }
+                    }
+
+                }
+
+                mapOfPurchases.put(new Purchase(nameOfItem, priceOfItem, typeOfItem)
+                        , new Purchase(nameOfItem, priceOfItem,typeOfItem).getPurchaseType());
             }
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
+        System.out.println();
+        System.out.println("Purchases were loaded!");
     }
 }
