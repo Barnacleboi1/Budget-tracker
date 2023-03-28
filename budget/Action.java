@@ -7,6 +7,7 @@ public enum Action {
     BALANCE("Balance", 4),
     SAVE("Save", 5),
     LOAD("Load", 6),
+    ANALYZE("Analyze", 7),
     EXIT("Exit", 0);
     private final String description;
     private final int number;

@@ -114,6 +114,20 @@ public class Main {
 
                 }
                 case LOAD -> loadFiles();
+                case ANALYZE -> {
+                    Sorter sorter = new Sorter();
+                    int userPick = 0;
+                    while (userPick != 4) {
+                        userPick = sorting();
+                        switch (userPick) {
+                            case 1 -> {
+                                sorter.setMethod(new sortAllPurchases());
+                                sorter.printSorted(mapOfPurchases);
+                            }
+                        }
+                    }
+                    System.out.println();
+                }
                 case EXIT -> {
                     System.out.println("Bye!");
                     System.exit(0);
@@ -168,9 +182,10 @@ public class Main {
                         4) %s
                         5) %s
                         6) %s
+                        7) %s
                         0) %s
                         """, ADD_INCOME, ADD_PURCHASE,
-                LIST_OF_PURCHASES, BALANCE, SAVE, LOAD, EXIT);
+                LIST_OF_PURCHASES, BALANCE, SAVE, LOAD, ANALYZE, EXIT);
         int result = scanner.nextInt();
         System.out.println();
 
@@ -180,6 +195,7 @@ public class Main {
                 : result == 4 ? BALANCE
                 : result == 5 ? SAVE
                 : result == 6 ? LOAD
+                : result == 7 ? ANALYZE
                 : result == 0 ? EXIT
                 : null;
     }
@@ -223,5 +239,14 @@ public class Main {
         }
         System.out.println();
         System.out.println("Purchases were loaded!");
+    }
+    public static int sorting() {
+        System.out.println("How do you want to sort?\n" +
+                "1) Sort all purchases\n" +
+                "2) Sort by type\n" +
+                "3) Sort certain type\n" +
+                "4) Back");
+        return scanner.nextInt();
+
     }
 }
