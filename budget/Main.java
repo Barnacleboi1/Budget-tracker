@@ -124,6 +124,14 @@ public class Main {
                                 sorter.setMethod(new sortAllPurchases());
                                 sorter.printSorted(mapOfPurchases);
                             }
+                            case 2 -> {
+                                sorter.setMethod(new sortByType());
+                                sorter.printSorted(mapOfPurchases);
+                            }
+                            case 3 -> {
+                                sorter.setMethod(new sortByCertainType());
+                                sorter.printSorted(mapOfPurchases);
+                            }
                         }
                     }
                     System.out.println();
@@ -237,15 +245,17 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println();
         System.out.println("Purchases were loaded!");
     }
     public static int sorting() {
-        System.out.println("How do you want to sort?\n" +
-                "1) Sort all purchases\n" +
-                "2) Sort by type\n" +
-                "3) Sort certain type\n" +
-                "4) Back");
+
+        System.out.println("""
+                How do you want to sort?
+                1) Sort all purchases
+                2) Sort by type
+                3) Sort certain type
+                4) Back""");
+
         return scanner.nextInt();
 
     }
