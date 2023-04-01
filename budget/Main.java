@@ -10,6 +10,7 @@ public class Main {
     public static double totalSumOfPurchases = 0;
     public static Map<Purchase, PurchaseType> mapOfPurchases= new HashMap<>();
     public static File file = new File ("purchases.txt");
+    
     public static void main(String[] args) {
 
 
