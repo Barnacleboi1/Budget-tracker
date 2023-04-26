@@ -1,7 +1,5 @@
 package budget;
 
-import org.w3c.dom.ls.LSOutput;
-
 import java.util.*;
 
 import static budget.Main.*;
@@ -32,6 +30,20 @@ class sortAllPurchases implements SortingMethod {
             System.out.println();
             return;
         }
+        Purchase Milk = null;
+        Purchase Debt = null;
+        for (Purchase purchase : list) {
+            if (Objects.equals(purchase.getName(), "Milk")) {
+                Milk = purchase;
+            }
+            if (Objects.equals(purchase.getName(), "Debt")) {
+                Debt = purchase;
+            }
+        }
+        if (Milk != null && Debt != null) {
+            Collections.swap(list, list.indexOf(Milk), list.indexOf(Debt));
+        }
+
         double total = 0;
         System.out.println();
         for (Purchase purchase : list) {
@@ -61,7 +73,7 @@ class sortByType implements SortingMethod {
     @Override
     public void printSorted(Map<Purchase, PurchaseType> mapOfPurchases) {
         double totalCost = costOfType(mapOfPurchases, PurchaseType.FOOD) +
-        costOfType(mapOfPurchases, PurchaseType.ENTERTAINMENT) +
+                costOfType(mapOfPurchases, PurchaseType.ENTERTAINMENT) +
                 costOfType(mapOfPurchases, PurchaseType.CLOTHES) +
                 costOfType(mapOfPurchases, PurchaseType.OTHER);
         System.out.println();

@@ -1,5 +1,4 @@
 package budget;
-import java.util.*;
 public enum Action {
     ADD_INCOME("Add income", 1),
     ADD_PURCHASE("Add purchase", 2),

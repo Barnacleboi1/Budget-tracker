@@ -28,22 +28,22 @@ public class Main {
 
                 case ADD_PURCHASE -> {
                     PurchaseType type = pickPurchaseType();
-                        while (type != PurchaseType.BACK) {
+                    while (type != PurchaseType.BACK) {
 
-                            System.out.println("Enter purchase name:");
-                            scanner.nextLine();
-                            String name = scanner.nextLine();
-                            System.out.println("Enter its price:");
-                            double price = scanner.nextDouble();
+                        System.out.println("Enter purchase name:");
+                        scanner.nextLine();
+                        String name = scanner.nextLine();
+                        System.out.println("Enter its price:");
+                        double price = scanner.nextDouble();
 
-                            mapOfPurchases.put(new Purchase(name, price, type)
-                                    , new Purchase(name, price, type).getPurchaseType());
-                            balance -= price;
-                            System.out.println("Purchase was added!");
-                            System.out.println();
-                            type = pickPurchaseType();
+                        mapOfPurchases.put(new Purchase(name, price, type)
+                                , new Purchase(name, price, type).getPurchaseType());
+                        balance -= price;
+                        System.out.println("Purchase was added!");
+                        System.out.println();
+                        type = pickPurchaseType();
 
-                        }
+                    }
                 }
 
                 case LIST_OF_PURCHASES -> {
